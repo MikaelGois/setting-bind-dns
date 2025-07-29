@@ -53,6 +53,13 @@
             color: #075985;
             font-weight: 600;
         }
+        .tab-button {
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .tab-button.active {
+            background-color: #075985;
+            color: white;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -83,7 +90,7 @@
             <p class="text-center text-gray-600 mb-8">Siga este fluxo de trabalho para uma implantação bem-sucedida. Clique em cada etapa para ver os detalhes e comandos essenciais.</p>
             <div id="workflow-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             </div>
-            <div id="workflow-details" class="bg-white p-6 rounded-lg shadow-md min-h-[200px]">
+            <div id="workflow-details" class="bg-white p-6 rounded-lg shadow-md min-h-[250px]">
                 <p class="text-gray-500 text-center">Selecione uma etapa acima para ver os detalhes.</p>
             </div>
         </section>
@@ -165,50 +172,68 @@
                 {
                     title: '1. Instalação',
                     icon: '📦',
-                    description: 'Instale os pacotes BIND e as ferramentas essenciais. Considere usar `bind-chroot` para uma camada extra de segurança desde o início.',
-                    content: `
-                        <h4 class="font-semibold text-lg mb-2">Comandos Principais</h4>
-                        <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo dnf install bind bind-utils bind-chroot -y</code>
-                        <h4 class="font-semibold text-lg mt-4 mb-2">Gerenciamento do Serviço</h4>
-                        <p class="text-sm mb-2">Use <code>systemctl</code> para controlar o serviço. Se usar chroot, substitua <code>named</code> por <code>named-chroot</code>.</p>
-                        <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo systemctl enable --now named-chroot</code>`
+                    description: 'Instale os pacotes BIND e as ferramentas essenciais. A abordagem varia ligeiramente entre as famílias de SO.',
+                    content: {
+                        redhat: `
+                            <h4 class="font-semibold text-lg mb-2">Comandos Principais (com chroot)</h4>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo dnf install bind bind-utils bind-chroot -y</code>
+                            <h4 class="font-semibold text-lg mt-4 mb-2">Gerenciamento do Serviço</h4>
+                            <p class="text-sm mb-2">Use <code>systemctl</code> com o serviço <code>named-chroot</code>.</p>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo systemctl enable --now named-chroot</code>`,
+                        debian: `
+                            <h4 class="font-semibold text-lg mb-2">Comandos Principais</h4>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo apt-get update\nsudo apt-get install bind9 bind9utils dnsutils -y</code>
+                            <h4 class="font-semibold text-lg mt-4 mb-2">Gerenciamento do Serviço</h4>
+                            <p class="text-sm mb-2">Em sistemas Debian, o serviço é chamado de <code>bind9</code>.</p>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo systemctl enable --now bind9</code>`
+                    }
                 },
                 {
                     title: '2. Configuração',
                     icon: '⚙️',
-                    description: 'Edite <code>/etc/named.conf</code> para definir o comportamento global do servidor e declare suas zonas de pesquisa direta e reversa.',
-                    content: `<h4 class="font-semibold text-lg mb-2">Arquivo Principal: <code>/etc/named.conf</code></h4>
-                        <p class="text-sm mb-2">Defina as diretivas no bloco <code>options {}</code>. As mais importantes são:</p>
-                        <ul class="list-disc list-inside text-sm space-y-1">
-                            <li><code>listen-on port 53 { ... };</code></li>
-                            <li><code>allow-query { ... };</code></li>
-                            <li><code>recursion [yes|no];</code></li>
-                            <li><code>allow-recursion { ... };</code> (CRÍTICO se recursion for 'yes')</li>
-                        </ul>
-                        <h4 class="font-semibold text-lg mt-4 mb-2">Declaração de Zona</h4>
-                        <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">zone "exemplo.local" IN {\n    type master;\n    file "exemplo.local.db";\n    allow-update { none; };\n};</code>`
+                    description: 'Edite os arquivos de configuração para definir o comportamento global e declarar suas zonas.',
+                    content: {
+                        redhat: `<h4 class="font-semibold text-lg mb-2">Arquivo Principal: <code>/etc/named.conf</code></h4>
+                            <p class="text-sm mb-2">Defina as diretivas no bloco <code>options {}</code>. As zonas são geralmente declaradas em <code>/etc/named.rfc1912.zones</code>.</p>
+                            <h4 class="font-semibold text-lg mt-4 mb-2">Declaração de Zona</h4>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">zone "exemplo.local" IN {\n    type master;\n    file "exemplo.local.db";\n    allow-update { none; };\n};</code>`,
+                        debian: `<h4 class="font-semibold text-lg mb-2">Arquivo Principal: <code>/etc/bind/named.conf.local</code></h4>
+                            <p class="text-sm mb-2">As opções globais estão em <code>/etc/bind/named.conf.options</code>. Adicione suas declarações de zona aqui.</p>
+                            <h4 class="font-semibold text-lg mt-4 mb-2">Declaração de Zona</h4>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">zone "exemplo.local" {\n    type master;\n    file "/etc/bind/zones/exemplo.local.db";\n    allow-update { none; };\n};</code>`
+                    }
                 },
                 {
                     title: '3. Validação',
                     icon: '✅',
-                    description: 'Antes de ativar, sempre verifique a sintaxe dos seus arquivos de configuração e de zona para evitar que o serviço falhe ao iniciar.',
-                    content: `<h4 class="font-semibold text-lg mb-2">Verificar Configuração Global</h4>
-                        <p class="text-sm mb-2">Este comando não deve retornar nenhuma saída se estiver tudo correto.</p>
-                        <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo named-checkconf</code>
-                        <h4 class="font-semibold text-lg mt-4 mb-2">Verificar Arquivo de Zona</h4>
-                        <p class="text-sm mb-2">Execute para cada arquivo de zona que você criou.</p>
-                        <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo named-checkzone exemplo.local /var/named/exemplo.local.db</code>`
+                    description: 'Sempre verifique a sintaxe dos seus arquivos de configuração e de zona antes de ativar o serviço.',
+                    content: {
+                        redhat: `<h4 class="font-semibold text-lg mb-2">Verificar Configuração Global</h4>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo named-checkconf</code>
+                            <h4 class="font-semibold text-lg mt-4 mb-2">Verificar Arquivo de Zona</h4>
+                            <p class="text-sm mb-2">O caminho do arquivo de zona é relativo a <code>/var/named/</code>.</p>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo named-checkzone exemplo.local /var/named/exemplo.local.db</code>`,
+                        debian: `<h4 class="font-semibold text-lg mb-2">Verificar Configuração Global</h4>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo named-checkconf</code>
+                            <h4 class="font-semibold text-lg mt-4 mb-2">Verificar Arquivo de Zona</h4>
+                            <p class="text-sm mb-2">Use o caminho completo para o arquivo de zona.</p>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo named-checkzone exemplo.local /etc/bind/zones/exemplo.local.db</code>`
+                    }
                 },
                 {
                     title: '4. Ativação e Teste',
                     icon: '🚀',
-                    description: 'Recarregue a configuração, configure um cliente para usar o novo servidor e teste a resolução de nomes com ferramentas como <code>dig</code>.',
-                    content: `<h4 class="font-semibold text-lg mb-2">Aplicar Configurações</h4>
-                        <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo systemctl reload named-chroot</code>
-                        <h4 class="font-semibold text-lg mt-4 mb-2">Testar com <code>dig</code></h4>
-                        <p class="text-sm mb-2">Teste a resolução direta e reversa.</p>
-                        <code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-2"># Pesquisa direta\ndig @127.0.0.1 servidorweb.exemplo.local</code>
-                        <code class="block bg-gray-800 text-white p-3 rounded-md text-sm"># Pesquisa reversa\ndig @127.0.0.1 -x 192.168.1.150</code>`
+                    description: 'Recarregue a configuração e teste a resolução de nomes com ferramentas como <code>dig</code>.',
+                    content: {
+                        redhat: `<h4 class="font-semibold text-lg mb-2">Aplicar Configurações</h4>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo systemctl reload named-chroot</code>
+                            <h4 class="font-semibold text-lg mt-4 mb-2">Testar com <code>dig</code></h4>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 servidorweb.exemplo.local</code>`,
+                        debian: `<h4 class="font-semibold text-lg mb-2">Aplicar Configurações</h4>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo systemctl reload bind9</code>
+                            <h4 class="font-semibold text-lg mt-4 mb-2">Testar com <code>dig</code></h4>
+                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 servidorweb.exemplo.local</code>`
+                    }
                 }
             ];
 
@@ -233,10 +258,37 @@
                 card.addEventListener('click', () => {
                     document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
                     card.classList.add('active');
-                    workflowDetails.innerHTML = step.content;
+                    renderWorkflowDetails(step.content);
                 });
                 workflowContainer.appendChild(card);
             });
+
+            function renderWorkflowDetails(content) {
+                workflowDetails.innerHTML = `
+                    <div class="flex border-b border-gray-200 mb-4">
+                        <button data-tab="redhat" class="tab-button py-2 px-4 font-semibold text-gray-600 rounded-t-md active">Base Red Hat</button>
+                        <button data-tab="debian" class="tab-button py-2 px-4 font-semibold text-gray-600 rounded-t-md">Base Debian</button>
+                    </div>
+                    <div>
+                        <div data-tab-content="redhat" class="tab-content whitespace-pre-wrap">${content.redhat}</div>
+                        <div data-tab-content="debian" class="tab-content whitespace-pre-wrap hidden">${content.debian}</div>
+                    </div>
+                `;
+                
+                workflowDetails.querySelectorAll('.tab-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const targetTab = e.target.dataset.tab;
+                        
+                        workflowDetails.querySelectorAll('.tab-button').forEach(btn => {
+                            btn.classList.toggle('active', btn.dataset.tab === targetTab);
+                        });
+
+                        workflowDetails.querySelectorAll('.tab-content').forEach(contentPanel => {
+                            contentPanel.classList.toggle('hidden', contentPanel.dataset.tabContent !== targetTab);
+                        });
+                    });
+                });
+            }
 
             const recordList = document.getElementById('record-list');
             const recordDetails = document.getElementById('record-details');
