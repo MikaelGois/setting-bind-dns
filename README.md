@@ -328,7 +328,7 @@ dig (Domain Information Groper) é geralmente preferido em ambientes Linux pela 
   ```
 Se os testes forem bem-sucedidos, o ciclo está completo. Se falharem, o administrador deve voltar ao passo de edição, verificar os arquivos de configuração e de zona, e repetir o ciclo de validação e teste. Esta metodologia iterativa é a chave para uma gestão eficaz e segura do BIND.
 
-## 6 - Configurações Avançadas do BIND**
+## **6 - Configurações Avançadas do BIND**
 
 Uma vez que a funcionalidade básica do servidor DNS está estabelecida e testada, é possível explorar recursos avançados para aumentar a redundância, a flexibilidade e a segurança. A implementação destes recursos, no entanto, não deve ser uma decisão impulsiva; exige um planeamento cuidadoso da arquitetura de rede, pois as suas implicações vão muito além da configuração de um único servidor.
 
@@ -435,7 +435,7 @@ Os tópicos avançados, como a replicação mestre-escravo, o DNS de horizonte d
 
 Para estudos futuros, recomenda-se o aprofundamento em estratégias de monitoramento de desempenho e logging do BIND, a exploração de tecnologias de DNS mais recentes como DNS over TLS (DoT) e DNS over HTTPS (DoH) para privacidade aprimorada, e um estudo completo sobre o gerenciamento do ciclo de vida das chaves DNSSEC. Com os fundamentos sólidos estabelecidos neste guia, o administrador está bem posicionado para continuar a expandir os seus conhecimentos e a construir e manter serviços de DNS de nível empresarial.
 
-#### **Referências citadas**
+#### **Referências**
 
 1. [docs.rockylinux.org](http://docs.rockylinux.org)  
 2. [forums.rockylinux.org/](http://forums.rockylinux.org/)  
