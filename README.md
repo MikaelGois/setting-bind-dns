@@ -153,7 +153,7 @@ zone "exemplo.local" IN {
 
 ### **4.2 \- Construindo o Arquivo de Zona Direta**
 
-O arquivo de zona é um arquivo de texto simples que contém os registros DNS. Ele deve ser criado no diretório **/var/named/** e ter as permissões corretas para que o processo **named** possa lê-lo. É comum definir a propriedade para **root:named** e as permissões para **640**.
+O arquivo de zona é um arquivo de texto simples que contém os registros DNS. Ele deve ser criado no diretório **/var/named/** e ter as permissões corretas para que o processo **named** possa lê-lo. É comum definir a propriedade para **root:named** e as permissões para **640**. Em sistemas com base debian, o a propriedade é **root:bind**.
 
 Abaixo está um exemplo de um arquivo de zona direta (**/var/named/exemplo.local.db**) com explicações detalhadas:
 ```
@@ -330,13 +330,13 @@ Se os testes forem bem-sucedidos, o ciclo está completo. Se falharem, o adminis
 
 ## **6 - Configurações Avançadas do BIND**
 
-Uma vez que a funcionalidade básica do servidor DNS está estabelecida e testada, é possível explorar recursos avançados para aumentar a redundância, a flexibilidade e a segurança. A implementação destes recursos, no entanto, não deve ser uma decisão impulsiva; exige um planeamento cuidadoso da arquitetura de rede, pois as suas implicações vão muito além da configuração de um único servidor.
+Uma vez que a funcionalidade básica do servidor DNS está estabelecida e testada, é possível explorar recursos avançados para aumentar a redundância, a flexibilidade e a segurança. A implementação destes recursos, no entanto, não deve ser uma decisão impulsiva; exige um planejamento cuidadoso da arquitetura de rede, pois as suas implicações vão muito além da configuração de um único servidor.
 
 ### **6.1 - Implementando um Servidor DNS Secundário (Slave)**
 
-**Considerações de Planeamento:** Antes de configurar um servidor secundário, é necessário garantir que existe um segundo host com conectividade de rede estável ao servidor primário (mestre). As regras de firewall em ambos os servidores devem ser ajustadas para permitir o tráfego de transferência de zona (porta 53/TCP) entre eles.
+**Considerações de Planejamento:** Antes de configurar um servidor secundário, é necessário garantir que existe um segundo host com conectividade de rede estável ao servidor primário (mestre). As regras de firewall em ambos os servidores devem ser ajustadas para permitir o tráfego de transferência de zona (porta 53/TCP) entre eles.
 
-**Conceito e Benefícios:** A arquitetura mestre-escravo é o método padrão para fornecer redundância e balanceamento de carga para um serviço DNS. O servidor mestre detém a cópia editável dos arquivos de zona, enquanto um ou mais servidores escravos obtêm cópias somente leitura desses arquivos através de um processo chamado transferência de zona (AXFR/IXFR). Se o servidor mestre falhar, os escravos podem continuar a responder às consultas, garantindo a alta disponibilidade do serviço.10
+**Conceito e Benefícios:** A arquitetura mestre-escravo é o método padrão para fornecer redundância e balanceamento de carga para um serviço DNS. O servidor mestre detém a cópia editável dos arquivos de zona, enquanto um ou mais servidores escravos obtêm cópias somente leitura desses arquivos através de um processo chamado transferência de zona (AXFR/IXFR). Se o servidor mestre falhar, os escravos podem continuar a responder às consultas, garantindo a alta disponibilidade do serviço.
 
 **Configuração no Servidor Mestre:** No servidor mestre, os blocos zone no arquivo de configuração devem ser modificados para permitir a transferência para o IP do servidor escravo.
 ```
@@ -363,9 +363,9 @@ sudo setsebool -P named_write_master_zones on
 ```
 ### **6.2 - DNS de Horizonte Dividido (Split-Horizon) com view**
 
-**Considerações de Planeamento:** A implementação de um DNS de horizonte dividido requer uma refatoração completa do arquivo /etc/named.conf. Todas as declarações de zona existentes devem ser movidas para dentro de blocos view. É crucial mapear claramente quais clientes pertencem a qual visão (interna ou externa) antes de iniciar a configuração.
+**Considerações de Planejamento:** A implementação de um DNS de horizonte dividido requer uma refatoração completa do arquivo /etc/named.conf. Todas as declarações de zona existentes devem ser movidas para dentro de blocos view. É crucial mapear claramente quais clientes pertencem a qual visão (interna ou externa) antes de iniciar a configuração.
 
-**Caso de Uso:** Este é um cenário comum em que um servidor precisa fornecer respostas DNS diferentes dependendo da origem da consulta. Por exemplo, para servidorweb.exemplo.com, os clientes internos devem receber um endereço IP privado (ex: 192.168.1.150), enquanto os clientes externos (da Internet) devem receber um endereço IP público. Isto é conseguido com a diretiva view.21
+**Caso de Uso:** Este é um cenário comum em que um servidor precisa fornecer respostas DNS diferentes dependendo da origem da consulta. Por exemplo, para servidorweb.exemplo.com, os clientes internos devem receber um endereço IP privado (ex: 192.168.1.150), enquanto os clientes externos (da Internet) devem receber um endereço IP público. Isto é conseguido com a diretiva view.
 
 **Configuração com view:** O named.conf é estruturado com múltiplos blocos view. A diretiva match-clients é usada para especificar quais clientes se enquadram em cada visão.
 ```
@@ -403,9 +403,9 @@ Neste cenário, seriam necessários dois arquivos de zona distintos para exemplo
 
 ### **6.3 - Introdução ao DNSSEC**
 
-**Considerações de Planeamento:** O DNSSEC (Domain Name System Security Extensions) adiciona uma camada significativa de complexidade, envolvendo a geração e gestão de chaves criptográficas e a interação com o registrador do seu domínio para estabelecer uma cadeia de confiança. A sua implementação deve ser bem planeada e compreendida.
+**Considerações de Planejamento:** O DNSSEC (Domain Name System Security Extensions) adiciona uma camada significativa de complexidade, envolvendo a geração e gestão de chaves criptográficas e a interação com o registrador do seu domínio para estabelecer uma cadeia de confiança. A sua implementação deve ser bem planeada e compreendida.
 
-**Conceito:** O DNSSEC foi projetado para proteger os utilizadores de dados DNS falsificados, como os resultantes de ataques de envenenamento de cache (cache poisoning). Ele faz isso assinando digitalmente os dados da zona com chaves criptográficas. Os resolvedores que suportam DNSSEC podem então verificar estas assinaturas para garantir que os dados recebidos são autênticos e não foram adulterados em trânsito.10
+**Conceito:** O DNSSEC foi projetado para proteger os utilizadores de dados DNS falsificados, como os resultantes de ataques de envenenamento de cache (cache poisoning). Ele faz isso assinando digitalmente os dados da zona com chaves criptográficas. Os resolvedores que suportam DNSSEC podem então verificar estas assinaturas para garantir que os dados recebidos são autênticos e não foram adulterados em trânsito.
 
 **Habilitando a Validação (Lado Recursivo):** Para um servidor BIND que atua como um resolvedor de cache para clientes locais, habilitar a validação DNSSEC é simples. Adicione o seguinte ao bloco options no named.conf:
 ```
