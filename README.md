@@ -1,5 +1,5 @@
 
-# **Guia de configuração do DNS BIND no Rocky Linux**
+# **Guia de configuração do DNS BIND no Linux**
 
 ## **1 \- Instalação e Configuração Inicial do Serviço**
 
