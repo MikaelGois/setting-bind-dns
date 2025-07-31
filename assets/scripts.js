@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
       content: {
         redhat:
           `<h4 class="font-semibold text-lg mb-2">Comandos Principais (com chroot)</h4>
-<code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo dnf update\nsudo dnf install bind bind-utils bind-chroot -y</code>
+<code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo dnf update\nsudo dnf install bind bind-utils -y</code>
 <p class="text-sm mb-2">Para sistemas sem chroot, instale apenas <code>bind</code> e <code>bind-utils</code>.</p>
 <h4 class="font-semibold text-lg mt-4 mb-2">Gerenciamento do Serviço</h4>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo systemctl enable --now named-chroot</code>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo systemctl enable --now named</code>
 <p class="text-sm mb-2">Use <code>systemctl</code> com o serviço <code>named</code> para sistemas sem chroot.</p>`,
         debian:
           `<h4 class="font-semibold text-lg mb-2">Comandos Principais</h4>
@@ -28,29 +28,29 @@ document.addEventListener('DOMContentLoaded', () => {
         redhat:
           `<h4 class="font-semibold text-lg mb-2">Arquivo Principal: <code>/etc/named.conf</code></h4>
 <p class="text-sm mb-2">Defina as diretivas globais no bloco <code>options {}</code>. Exemplo:</p>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">options {\n    listen-on port 53 { 127.0.0.1; 192.168.1.100; };\n    allow-query { localhost; 192.168.1.0/24; };\n    recursion yes;\n    allow-recursion { localhost; 192.168.1.0/24; };\n    ...\n};</code>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">options {\n    listen-on port 53 { 127.0.0.1; 192.168.1.1; };\n    allow-query { localhost; 192.168.1.0/24; };\n    recursion yes;\n    allow-recursion { localhost; 192.168.1.0/24; };\n    ...\n};</code>
 <h4 class="font-semibold text-lg mt-4 mb-2">Declaração de Zona: <code>/etc/named.rfc1912.zones</code></h4>
 <p class="text-sm mb-2">Você também pode criar um arquivo com outro nome (por exemplo, <code>/etc/named.exemplo.zones</code>).</p>
 <code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">zone "exemplo.local" IN {\n    type master;\n    file "exemplo.local.db";\n    allow-update { none; };\n    ...\n};\n...</code>
 <h4 class="font-semibold text-lg mt-4 mb-2">Arquivo de Zona de pesquisa direta: <code>/var/named/exemplo.local.db</code></h4>
 <p class="text-sm mb-2">Crie o arquivo de zona em <code>/var/named/</code> (por exemplo, <code>/var/named/exemplo.local.db</code>) e defina as permissões corretas.</p>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">\$TTL 86400\n@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    3600 ; Refresh\n    1800 ; Retry\n    604800 ; Expire\n    86400 ; Minimum TTL\n);\n\n@ IN NS ns1.exemplo.local.\nns1 IN A 192.168.1.100\n...</code>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">\$TTL 86400\n@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    3600 ; Refresh\n    1800 ; Retry\n    604800 ; Expire\n    86400 ; Minimum TTL\n);\n\n@ IN NS ns1.exemplo.local.\nns1 IN A 192.168.1.1\n...</code>
 <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo chown root:named /var/named/exemplo.local.db\nsudo chmod 640 /var/named/exemplo.local.db</code>
 <h4 class="font-semibold text-lg mt-4 mb-2">Arquivo de Zona de pesquisa reversa: <code>/var/named/1.168.192.in-addr.arpa.db</code></h4>
 <p class="text-sm mb-2">Crie o arquivo de zona em <code>/var/named/</code> (por exemplo, <code>/var/named/1.168.192.in-addr.arpa.db</code>) e defina as permissões corretas.</p>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">\$TTL 86400\n@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    3600 ; Refresh\n    1800 ; Retry\n    604800 ; Expire\n    86400 ; Minimum TTL\n);\n\n@ IN NS ns1.exemplo.local.\n100 IN PTR servidorweb.exemplo.local.\n...</code>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">\$TTL 86400\n@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    3600 ; Refresh\n    1800 ; Retry\n    604800 ; Expire\n    86400 ; Minimum TTL\n);\n\n@ IN NS ns1.exemplo.local.\n1 IN PTR ns1.exemplo.local.\n...</code>
 <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo chown root:named /var/named/1.168.192.in-addr.arpa.db\nsudo chmod 640 /var/named/1.168.192.in-addr.arpa.db</code>`,
         debian:
           `<h4 class="font-semibold text-lg mb-2">Opções Globais: <code>/etc/bind/named.conf.options</code></h4>
 <p class="text-sm mb-2">Defina as diretivas globais neste arquivo. Exemplo:</p>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">options {\n    listen-on port 53 { 127.0.0.1; 192.168.1.100; };\n    allow-query { localhost; 192.168.1.0/24; };\n    recursion yes;\n    allow-recursion { localhost; 192.168.1.0/24; };\n    ...\n};</code>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">options {\n    listen-on port 53 { 127.0.0.1; 192.168.1.1; };\n    allow-query { localhost; 192.168.1.0/24; };\n    recursion yes;\n    allow-recursion { localhost; 192.168.1.0/24; };\n    ...\n};</code>
 <h4 class="font-semibold text-lg mt-4 mb-2">Declaração de Zona: <code>/etc/bind/named.conf.local</code>)</h4>
 <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">zone "exemplo.local" {\n    type master;\n    file "/etc/bind/zones/exemplo.local.db";\n    allow-update { none; };\n    ...\n};\n...</code>
 <h4 class="font-semibold text-lg mt-4 mb-2">Arquivo de Zona de pesquisa direta: <code>/etc/bind/zones/exemplo.local.db</code></h4>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">\$TTL 86400\n@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    3600 ; Refresh\n    1800 ; Retry\n    604800 ; Expire\n    86400 ; Minimum TTL\n);\n\n@ IN NS ns1.exemplo.local.\nns1 IN A 192.168.1.100\n...</code>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">\$TTL 86400\n@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    3600 ; Refresh\n    1800 ; Retry\n    604800 ; Expire\n    86400 ; Minimum TTL\n);\n\n@ IN NS ns1.exemplo.local.\nns1 IN A 192.168.1.1\n...</code>
 <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo chown root:named /etc/bind/zones/exemplo.local.db\nsudo chmod 640 /etc/bind/zones/exemplo.local.db</code>
 <h4 class="font-semibold text-lg mt-4 mb-2">Arquivo de Zona de pesquisa reversa: <code>/etc/bind/zones/1.168.192.in-addr.arpa.db</code></h4>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">\$TTL 86400\n@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    3600 ; Refresh\n    1800 ; Retry\n    604800 ; Expire\n    86400 ; Minimum TTL\n);\n\n@ IN NS ns1.exemplo.local.\n100 IN PTR servidorweb.exemplo.local.\n...</code>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">\$TTL 86400\n@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    3600 ; Refresh\n    1800 ; Retry\n    604800 ; Expire\n    86400 ; Minimum TTL\n);\n\n@ IN NS ns1.exemplo.local.\n1 IN PTR ns1.exemplo.local.\n...</code>
 <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo chown root:named /etc/bind/zones/1.168.192.in-addr.arpa.db\nsudo chmod 640 /etc/bind/zones/1.168.192.in-addr.arpa.db</code>`,
       }
     },
@@ -80,25 +80,35 @@ document.addEventListener('DOMContentLoaded', () => {
       content: {
         redhat:
           `<h4 class="font-semibold text-lg mb-2">Aplicar Configurações</h4>
-<code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo systemctl reload named-chroot</code>
+<code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo systemctl reload named</code>
 <h4 class="font-semibold text-lg mt-4 mb-2">Testar com <code>dig</code></h4>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 servidorweb.exemplo.local</code>`,
+<p class="text-sm mb-2">Teste de consulta direta.</p>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 exemplo.local</code>
+<p class="text-sm mb-2">Teste de consulta reversa.</p>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 -x 192.168.1.1</code>
+<p class="text-sm mb-2">Teste de forwarding.</p>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 google.com</code>`,
         debian:
           `<h4 class="font-semibold text-lg mb-2">Aplicar Configurações</h4>
 <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo systemctl reload bind9</code>
 <h4 class="font-semibold text-lg mt-4 mb-2">Testar com <code>dig</code></h4>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 servidorweb.exemplo.local</code>`
+<p class="text-sm mb-2">Teste de consulta direta.</p>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 exemplo.local</code>
+<p class="text-sm mb-2">Teste de consulta reversa.</p>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 -x 192.168.1.1</code>
+<p class="text-sm mb-2">Teste de forwarding.</p>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 google.com</code>`,
       }
     }
   ];
 
   const recordData = {
-    'A': { title: 'A (Address)', description: 'Mapeia um nome de host para um endereço IPv4. É o tipo de registro mais comum.', syntax: 'nome-do-host IN A endereco-ipv4', example: 'servidorweb IN A 192.168.1.150' },
-    'AAAA': { title: 'AAAA (IPv6 Address)', description: 'Mapeia um nome de host para um endereço IPv6.', syntax: 'nome-do-host IN AAAA endereco-ipv6', example: 'servidorweb IN AAAA 2001:db8:1::150' },
-    'CNAME': { title: 'CNAME (Canonical Name)', description: 'Cria um alias (apelido) de um nome para outro. O alias aponta para o nome canônico.', syntax: 'alias IN CNAME nome-canonico', example: 'www IN CNAME servidorweb.exemplo.local.' },
+    'A': { title: 'A (Address)', description: 'Mapeia um nome de host para um endereço IPv4. É o tipo de registro mais comum.', syntax: 'nome-do-host IN A endereco-ipv4', example: 'ns1 IN A 192.168.1.1' },
+    'AAAA': { title: 'AAAA (IPv6 Address)', description: 'Mapeia um nome de host para um endereço IPv6.', syntax: 'nome-do-host IN AAAA endereco-ipv6', example: 'ns1 IN AAAA 2001:db8:1::1' },
+    'CNAME': { title: 'CNAME (Canonical Name)', description: 'Cria um alias (apelido) de um nome para outro. O alias aponta para o nome canônico.', syntax: 'alias IN CNAME nome-canonico', example: 'www IN CNAME ns1.exemplo.local.' },
     'MX': { title: 'MX (Mail Exchanger)', description: 'Especifica os servidores de e-mail para o domínio, com uma prioridade numérica (menor é mais prioritário).', syntax: '@ IN MX prioridade servidor-de-email', example: '@ IN MX 10 mail.exemplo.local.' },
     'NS': { title: 'NS (Name Server)', description: 'Delega uma zona a um servidor de nomes autoritativo. Define quais servidores são responsáveis pelo domínio.', syntax: '@ IN NS nome-do-servidor-dns', example: '@ IN NS ns1.exemplo.local.' },
-    'PTR': { title: 'PTR (Pointer)', description: 'Usado em zonas de pesquisa reversa para mapear um endereço IP de volta a um nome de host.', syntax: 'ultimo-octeto IN PTR nome-do-host', example: '150 IN PTR servidorweb.exemplo.local.' },
+    'PTR': { title: 'PTR (Pointer)', description: 'Usado em zonas de pesquisa reversa para mapear um endereço IP de volta a um nome de host.', syntax: 'ultimo-octeto IN PTR nome-do-host', example: '1 IN PTR ns1.exemplo.local.' },
     'SOA': { title: 'SOA (Start of Authority)', description: 'Declara a autoridade para a zona, contendo informações críticas como o servidor mestre, o e-mail do administrador, o número de série e timers.', syntax: '@ IN SOA ...', example: '@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    ... )' },
     'TXT': { title: 'TXT (Text)', description: 'Permite associar texto arbitrário a um domínio. Usado para políticas de segurança como SPF e DKIM.', syntax: 'nome IN TXT "texto"', example: '@ IN TXT "v=spf1 mx -all"' },
   };
@@ -109,34 +119,40 @@ document.addEventListener('DOMContentLoaded', () => {
         id: 'rh_named_conf',
         title: 'named.conf',
         code: `// /etc/named.conf
-acl "trusted_clients" {
-    localhost;
-    192.168.1.0/24;
-};
 options {
-    listen-on port 53 { 127.0.0.1; 192.168.1.100; };
-    listen-on-v6 port 53 { ::1; };
-    directory       "/var/named";
-    allow-query     { trusted_clients; };
-    recursion yes;
-    allow-recursion { trusted_clients; };
-    forwarders { 8.8.8.8; 8.8.4.4; };
-    dnssec-validation yes;
-    pid-file "/run/named/named.pid";
+  listen-on port 53 { 127.0.0.1; 192.168.1.1; };
+  listen-on-v6 port 53 { ::1; };
+
+  directory "/var/named";
+  // dump-file "/var/named/data/cache_dump.db";
+  // statistics-file "var/named/data/named_stats.txt";
+  // memstatistics-file "/var/named/data/named_mem_stats.txt";
+  // secroots-file "/var/named/data/named.secroots";
+  // recursing-file "/var/named/data/named.recursing";
+
+  allow-transfer { none; };
+  allow-query { localhost; 192.168.1.0/24; };
+  recursion yes;
+  allow-recursion { localhost; 192.168.1.0/24; };
+  forwarders { 8.8.8.8; 8.8.4.4; };
+  dnssec-validation auto;
+  pid-file "/run/named/named.pid";
 };
 logging {
-    channel default_debug {
-        file "data/named.run";
-        severity dynamic;
-    };
-};
-include "/etc/named.rfc1912.zones";
+  channel default_log {
+    file "logs/named.log" versions 3 size 20m;
+    severity dynamic;
+    print-time yes;
+    print-category yes;
+    print-severity yes;
+}
+include "/etc/named.exemplo.zones";
 include "/etc/named.root.key";`
       },
       {
-        id: 'rh_rfc1912',
-        title: 'named.rfc1912.zones',
-        code: `// /etc/named.rfc1912.zones
+        id: 'exemplo',
+        title: 'named.exemplo.zones',
+        code: `// /etc/named.exemplo.zones
 zone "exemplo.local" IN {
     type master;
     file "exemplo.local.db";
@@ -152,31 +168,29 @@ zone "1.168.192.in-addr.arpa" IN {
         id: 'rh_direct',
         title: 'exemplo.local.db',
         code: `; /var/named/exemplo.local.db
-$TTL 1D
-@   IN  SOA ns1.exemplo.local. admin.exemplo.local. (
-        2024073001 ; Serial
-        1H         ; Refresh
-        15M        ; Retry
-        1W         ; Expire
-        1D )       ; Negative Cache TTL
-@       IN  NS  ns1.exemplo.local.
-ns1     IN  A   192.168.1.100
-www     IN  A   192.168.1.150`
+$TTL 1D ; Default Time To Live
+@     IN  SOA ns1.exemplo.local. admin.exemplo.local. (
+          2024073001 ; Serial
+          1H         ; Refresh
+          15M        ; Retry
+          1W         ; Expire
+          1D )       ; Negative Cache TTL
+@     IN  NS  ns1.exemplo.local.
+ns1   IN  A   192.168.1.1`
       },
       {
         id: 'rh_reverse',
         title: '1.168.192.db',
         code: `; /var/named/1.168.192.db
-$TTL 1D
-@   IN  SOA ns1.exemplo.local. admin.exemplo.local. (
-        2024073001 ; Serial
-        1H         ; Refresh
-        15M        ; Retry
-        1W         ; Expire
-        1D )       ; Negative Cache TTL
-@       IN  NS  ns1.exemplo.local.
-100     IN  PTR ns1.exemplo.local.
-150     IN  PTR www.exemplo.local.`
+$TTL 1D ; Default Time To Live
+@     IN  SOA ns1.exemplo.local. admin.exemplo.local. (
+          2024073001 ; Serial
+          1H         ; Refresh
+          15M        ; Retry
+          1W         ; Expire
+          1D )       ; Negative Cache TTL
+@     IN  NS  ns1.exemplo.local.
+1     IN  PTR ns1.exemplo.local.`
       }
     ],
     debian: [
@@ -185,61 +199,75 @@ $TTL 1D
         title: 'named.conf.options',
         code: `// /etc/bind/named.conf.options
 options {
-    directory "/var/cache/bind";
-    listen-on port 53 { 127.0.0.1; 192.168.1.100; };
-    listen-on-v6 { any; };
-    allow-query { localhost; 192.168.1.0/24; };
-    recursion yes;
-    allow-recursion { localhost; 192.168.1.0/24; };
-    forwarders {
-        8.8.8.8;
-        8.8.4.4;
-    };
-    dnssec-validation auto;
-};`
+  listen-on port 53 { 127.0.0.1; 192.168.1.1; };
+  listen-on-v6 port 53 { ::1; };
+
+  directory "/var/cache/bind";
+  // dump-file "/var/cache/bind/cache_dump.db";
+  // statistics-file "/var/cache/bind/named_stats.txt";
+  // memstatistics-file "/var/cache/bind/named_mem_stats.txt";
+  // secroots-file "/var/cache/bind/named.secroots";
+  // recursing-file "/var/cache/bind/named.recursing";
+
+  allow-transfer { none; };
+  allow-query { localhost; 192.168.1.0/24; };
+  recursion yes;
+  allow-recursion { localhost; 192.168.1.0/24; };
+  forwarders { 8.8.8.8; 8.8.4.4; };
+  dnssec-validation auto;
+  pid-file "/run/named/named.pid";
+};
+logging {
+  channel default_log {
+    file "logs/named.log" versions 3 size 20m;
+    severity dynamic;
+    print-time yes;
+    print-category yes;
+    print-severity yes;
+}`
       },
       {
         id: 'deb_local',
         title: 'named.conf.local',
         code: `// /etc/bind/named.conf.local
 zone "exemplo.local" {
-    type master;
-    file "/etc/bind/zones/exemplo.local.db";
+  type master;
+  file "/etc/bind/zones/exemplo.local.db";
+  allow-update { none; };
 };
 zone "1.168.192.in-addr.arpa" {
-    type master;
-    file "/etc/bind/zones/1.168.192.db";
+  type master;
+  file "/etc/bind/zones/1.168.192.db";
+  allow-update { none; };
 };`
       },
       {
         id: 'deb_direct',
         title: 'exemplo.local.db',
         code: `; /etc/bind/zones/exemplo.local.db
-$TTL 1D
-@   IN  SOA ns1.exemplo.local. admin.exemplo.local. (
-        2024073001 ; Serial
-        1H         ; Refresh
-        15M        ; Retry
-        1W         ; Expire
-        1D )       ; Negative Cache TTL
-@       IN  NS  ns1.exemplo.local.
-ns1     IN  A   192.168.1.100
-www     IN  A   192.168.1.150`
+$TTL 1D ; Default Time To Live
+@     IN  SOA ns1.exemplo.local. admin.exemplo.local. (
+          2024073001 ; Serial
+          1H         ; Refresh
+          15M        ; Retry
+          1W         ; Expire
+          1D )       ; Negative Cache TTL
+@     IN  NS  ns1.exemplo.local.
+ns1   IN  A   192.168.1.1`
       },
       {
         id: 'deb_reverse',
         title: '1.168.192.db',
         code: `; /etc/bind/zones/1.168.192.db
-$TTL 1D
-@   IN  SOA ns1.exemplo.local. admin.exemplo.local. (
-        2024073001 ; Serial
-        1H         ; Refresh
-        15M        ; Retry
-        1W         ; Expire
-        1D )       ; Negative Cache TTL
-@       IN  NS  ns1.exemplo.local.
-100     IN  PTR ns1.exemplo.local.
-150     IN  PTR www.exemplo.local.`
+$TTL 1D ; Default Time To Live
+@     IN  SOA ns1.exemplo.local. admin.exemplo.local. (
+          2024073001 ; Serial
+          1H         ; Refresh
+          15M        ; Retry
+          1W         ; Expire
+          1D )       ; Negative Cache TTL
+@     IN  NS  ns1.exemplo.local.
+1     IN  PTR ns1.exemplo.local.`
       }
     ]
   };

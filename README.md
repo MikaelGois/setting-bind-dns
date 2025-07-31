@@ -199,6 +199,18 @@ A tabela a seguir resume os tipos de registros mais comuns utilizados nos arquiv
 | SOA | Start of Authority | Declara a autoridade para a zona, contendo o servidor mestre, e-mail do administrador, serial e timers. |
 | TXT | Text | Permite associar texto arbitrário a um domínio. Usado para SPF, DKIM, verificação de propriedade de domínio, etc. |
 
+A tabela a seguir resume os tipos de timers mais comuns utilizados no registro SOA.
+
+| Timer | Descrição |
+| :---- | :---- |
+| Serial | O número da versão deste arquivo de zona. Servidores de nomes secundários somente atualizam suas cópias da zona se o número de série no servidor primário for maior. Formato comum: **YYYYMMDDNN** onde **NN** é um contador de duas dígitos para as alterações feitas no mesmo dia. |
+| Refresh | O tempo que os servidores secundários devem aguardar antes de verificar no servidor primário se a zona foi atualizada. |
+| Retry | O tempo após o qual um servidor secundário tenta consultar novamente o servidor primário após uma tentativa com falha. |
+| Expire | O tempo após o qual um servidor secundário para de consultar o servidor primário, se todas as tentativas anteriores falharam. |
+| Minimum (Negative Cache TTL) | A RFC 2308 alterou o significado deste campo para o tempo de cache negativo. Resolvedores compatíveis o utilizam para determinar por quanto tempo os erros de nome NXDOMAIN devem ser armazenados em cache. |
+| $TTL | O tempo de vida padrão para todos os registros na zona, a menos que especificado de outra forma. |
+
+
 ### **4.3. Declaração de uma Zona de Pesquisa Reversa (Reverse Lookup Zone)**
 
 Uma zona de pesquisa reversa permite resolver um endereço IP para um nome de host, o que é crucial para muitos serviços de rede, como servidores de e-mail e alguns protocolos de autenticação. O nome da zona é construído de uma forma especial: os octetos do prefixo da rede IP são invertidos e o sufixo **.in-addr.arpa** é adicionado. Por exemplo, para a rede **192.168.1.0/24**, a zona reversa correspondente é [**1.168.192.in-addr.arpa**](http://1.168.192.in-addr.arpa).
@@ -303,7 +315,7 @@ Após a execução destes comandos, o arquivo **/etc/resolv.conf** no cliente de
 
 ### **5.4 - Verificação com dig e nslookup**
 
-O passo final do ciclo é testar se o servidor DNS está a responder corretamente às consultas. As ferramentas dig e nslookup são usadas para este fim.29
+O passo final do ciclo é testar se o servidor DNS está a responder corretamente às consultas. As ferramentas dig e nslookup são usadas para este fim.
 
 dig (Domain Information Groper) é geralmente preferido em ambientes Linux pela sua saída detalhada e flexibilidade.
 
