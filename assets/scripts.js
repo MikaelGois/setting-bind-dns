@@ -16,8 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
           `<h4 class="font-semibold text-lg mb-2">Comandos Principais</h4>
 <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo apt-get update\nsudo apt-get install bind9 bind9utils dnsutils -y</code>
 <h4 class="font-semibold text-lg mt-4 mb-2">Gerenciamento do Serviço</h4>
-<p class="text-sm mb-2">Em sistemas Debian, o serviço é chamado de <code>bind9</code>.</p>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo systemctl enable --now bind9</code>`
+<p class="text-sm mb-2">Em sistemas Debian, o serviço <code>named</code> tem um alias chamado de <code>bind9</code>.</p>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo systemctl enable --now bind9</code>
+<p class="text-sm mb-2">Ou:</p>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo systemctl enable --now named</code>`
       }
     },
     {
@@ -45,13 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
 <p class="text-sm mb-2">Defina as diretivas globais neste arquivo. Exemplo:</p>
 <code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">options {\n    listen-on port 53 { 127.0.0.1; 192.168.1.1; };\n    allow-query { localhost; 192.168.1.0/24; };\n    recursion yes;\n    allow-recursion { localhost; 192.168.1.0/24; };\n    ...\n};</code>
 <h4 class="font-semibold text-lg mt-4 mb-2">Declaração de Zona: <code>/etc/bind/named.conf.local</code>)</h4>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">zone "exemplo.local" {\n    type master;\n    file "/etc/bind/zones/exemplo.local.db";\n    allow-update { none; };\n    ...\n};\n...</code>
-<h4 class="font-semibold text-lg mt-4 mb-2">Arquivo de Zona de pesquisa direta: <code>/etc/bind/zones/exemplo.local.db</code></h4>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">zone "exemplo.local" {\n    type master;\n    file "/etc/bind/exemplo.local.db";\n    allow-update { none; };\n    ...\n};\n...</code>
+<h4 class="font-semibold text-lg mt-4 mb-2">Arquivo de Zona de pesquisa direta: <code>/etc/bind/exemplo.local.db</code></h4>
 <code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">\$TTL 86400\n@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    3600 ; Refresh\n    1800 ; Retry\n    604800 ; Expire\n    86400 ; Minimum TTL\n);\n\n@ IN NS ns1.exemplo.local.\nns1 IN A 192.168.1.1\n...</code>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo chown root:named /etc/bind/zones/exemplo.local.db\nsudo chmod 640 /etc/bind/zones/exemplo.local.db</code>
-<h4 class="font-semibold text-lg mt-4 mb-2">Arquivo de Zona de pesquisa reversa: <code>/etc/bind/zones/1.168.192.in-addr.arpa.db</code></h4>
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo chown root:named /etc/bind/exemplo.local.db\nsudo chmod 640 /etc/bind/exemplo.local.db</code>
+<h4 class="font-semibold text-lg mt-4 mb-2">Arquivo de Zona de pesquisa reversa: <code>/etc/bind/1.168.192.in-addr.arpa.db</code></h4>
 <code class="block bg-gray-800 text-white p-3 rounded-md text-sm mb-4">\$TTL 86400\n@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    3600 ; Refresh\n    1800 ; Retry\n    604800 ; Expire\n    86400 ; Minimum TTL\n);\n\n@ IN NS ns1.exemplo.local.\n1 IN PTR ns1.exemplo.local.\n...</code>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo chown root:named /etc/bind/zones/1.168.192.in-addr.arpa.db\nsudo chmod 640 /etc/bind/zones/1.168.192.in-addr.arpa.db</code>`,
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo chown root:named /etc/bind/1.168.192.in-addr.arpa.db\nsudo chmod 640 /etc/bind/1.168.192.in-addr.arpa.db</code>`,
       }
     },
     {
@@ -70,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo named-checkconf</code>
 <h4 class="font-semibold text-lg mt-4 mb-2">Verificar Arquivo de Zona</h4>
 <p class="text-sm mb-2">Use o caminho completo para o arquivo de zona.\nValide a zona de pesquisa direta e reversa.</p>
-<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo named-checkzone exemplo.local /etc/bind/zones/exemplo.local.db</code>`
+<code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo named-checkzone exemplo.local /etc/bind/exemplo.local.db</code>`
       }
     },
     {
@@ -140,7 +142,7 @@ options {
 };
 logging {
   channel default_log {
-    file "logs/named.log" versions 3 size 20m;
+    file "named.log" versions 3 size 20m;
     severity dynamic;
     print-time yes;
     print-category yes;
@@ -219,7 +221,7 @@ options {
 };
 logging {
   channel default_log {
-    file "logs/named.log" versions 3 size 20m;
+    file "named.log" versions 3 size 20m;
     severity dynamic;
     print-time yes;
     print-category yes;
@@ -232,19 +234,19 @@ logging {
         code: `// /etc/bind/named.conf.local
 zone "exemplo.local" {
   type master;
-  file "/etc/bind/zones/exemplo.local.db";
+  file "/etc/bind/exemplo.local.db";
   allow-update { none; };
 };
 zone "1.168.192.in-addr.arpa" {
   type master;
-  file "/etc/bind/zones/1.168.192.db";
+  file "/etc/bind/1.168.192.db";
   allow-update { none; };
 };`
       },
       {
         id: 'deb_direct',
         title: 'exemplo.local.db',
-        code: `; /etc/bind/zones/exemplo.local.db
+        code: `; /etc/bind/exemplo.local.db
 $TTL 1D ; Default Time To Live
 @     IN  SOA ns1.exemplo.local. admin.exemplo.local. (
           2024073001 ; Serial
@@ -258,7 +260,7 @@ ns1   IN  A   192.168.1.1`
       {
         id: 'deb_reverse',
         title: '1.168.192.db',
-        code: `; /etc/bind/zones/1.168.192.db
+        code: `; /etc/bind/1.168.192.db
 $TTL 1D ; Default Time To Live
 @     IN  SOA ns1.exemplo.local. admin.exemplo.local. (
           2024073001 ; Serial
