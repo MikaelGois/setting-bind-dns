@@ -147,7 +147,8 @@ logging {
     print-time yes;
     print-category yes;
     print-severity yes;
-}
+  };
+};
 include "/etc/named.exemplo.zones";
 include "/etc/named.root.key";`
       },
@@ -172,7 +173,7 @@ zone "1.168.192.in-addr.arpa" IN {
         code: `; /var/named/exemplo.local.db
 $TTL 1D ; Default Time To Live
 @     IN  SOA ns1.exemplo.local. admin.exemplo.local. (
-          2024073001 ; Serial
+          2025080101 ; Serial
           1H         ; Refresh
           15M        ; Retry
           1W         ; Expire
@@ -186,7 +187,7 @@ ns1   IN  A   192.168.1.1`
         code: `; /var/named/1.168.192.db
 $TTL 1D ; Default Time To Live
 @     IN  SOA ns1.exemplo.local. admin.exemplo.local. (
-          2024073001 ; Serial
+          2025080101 ; Serial
           1H         ; Refresh
           15M        ; Retry
           1W         ; Expire
@@ -226,7 +227,8 @@ logging {
     print-time yes;
     print-category yes;
     print-severity yes;
-}`
+  };
+};`
       },
       {
         id: 'deb_local',
@@ -249,7 +251,7 @@ zone "1.168.192.in-addr.arpa" {
         code: `; /etc/bind/exemplo.local.db
 $TTL 1D ; Default Time To Live
 @     IN  SOA ns1.exemplo.local. admin.exemplo.local. (
-          2024073001 ; Serial
+          2025080101 ; Serial
           1H         ; Refresh
           15M        ; Retry
           1W         ; Expire
@@ -263,7 +265,7 @@ ns1   IN  A   192.168.1.1`
         code: `; /etc/bind/1.168.192.db
 $TTL 1D ; Default Time To Live
 @     IN  SOA ns1.exemplo.local. admin.exemplo.local. (
-          2024073001 ; Serial
+          2025080101 ; Serial
           1H         ; Refresh
           15M        ; Retry
           1W         ; Expire
