@@ -1,93 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guia Interativo: Configurando o BIND no Rocky Linux</title>
+    <title>Guia Interativo: Configurando o BIND no Linux</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F8F7F4; /* Warm Neutral Background */
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 350px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-                max-height: 400px;
-            }
-        }
-        .nav-link {
-            transition: color 0.3s, border-bottom-color 0.3s;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: #075985; /* Accent Color */
-            border-bottom-color: #075985;
-        }
-        .step-card {
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-        }
-        .step-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .step-card.active {
-            border-color: #075985;
-            box-shadow: 0 0 0 3px rgba(7, 89, 133, 0.2);
-        }
-        .record-item.active {
-            background-color: #E0E7FF;
-            color: #075985;
-            font-weight: 600;
-        }
-        .tab-button {
-            transition: background-color 0.2s, color 0.2s;
-        }
-        .tab-button.active {
-            background-color: #075985;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/style.css">
+
+    <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="BIND no Linux" />
+    <link rel="manifest" href="assets/favicon/site.webmanifest" />
 </head>
+
 <body class="text-gray-800">
 
     <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
         <nav class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
-                <div class="text-2xl font-bold text-gray-900">BIND no <span class="text-[#075985]">Rocky Linux</span></div>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#workflow" class="nav-link border-b-2 border-transparent pb-1">Fluxo de Trabalho</a>
-                    <a href="#security" class="nav-link border-b-2 border-transparent pb-1">Segurança</a>
-                    <a href="#zones" class="nav-link border-b-2 border-transparent pb-1">Arquivos de Zona</a>
-                    <a href="#advanced" class="nav-link border-b-2 border-transparent pb-1">Cenários Avançados</a>
-                </div>
+                <a href="/" class="flex items-center space-x-2">
+                    <img src="assets/favicon/favicon-96x96.png" alt="Logo BIND"
+                        style="width: 32px; height: 32px; vertical-align: middle;">
+                    <div class="text-2xl font-bold text-gray-900">
+                        BIND no <span class="text-[#075985]">Linux</span>
+                    </div>
+                    <div class="hidden md:flex space-x-6 lg:space-x-8">
+                        <a href="#workflow" class="nav-link border-b-2 border-transparent pb-1">Fluxo de Trabalho</a>
+                        <a href="#security" class="nav-link border-b-2 border-transparent pb-1">Segurança</a>
+                        <a href="#zones" class="nav-link border-b-2 border-transparent pb-1">Arquivos de Zona</a>
+                        <a href="#config-example" class="nav-link border-b-2 border-transparent pb-1">Configuração
+                            Completa</a>
+                        <a href="#advanced" class="nav-link border-b-2 border-transparent pb-1">Cenários Avançados</a>
+                    </div>
             </div>
         </nav>
     </header>
 
     <main class="container mx-auto px-4 py-8 md:py-12">
-        
         <section id="hero" class="text-center mb-16">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Seu Guia Interativo para o BIND</h1>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Transformamos o guia de configuração do BIND em uma experiência prática. Navegue pelas seções para visualizar o processo, entender as camadas de segurança e explorar a sintaxe de configuração de forma interativa.</p>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Seu Guia Interativo para a configuração do BIND</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Transformamos o guia de configuração do BIND em uma
+                experiência prática. Navegue pelas seções para visualizar o processo, entender as camadas de segurança e
+                explorar a sintaxe de configuração de forma interativa.</p>
         </section>
 
         <section id="workflow" class="mb-16">
             <h2 class="text-3xl font-bold text-center mb-2">Fluxo de Trabalho de Implantação</h2>
-            <p class="text-center text-gray-600 mb-8">Siga este fluxo de trabalho para uma implantação bem-sucedida. Clique em cada etapa para ver os detalhes e comandos essenciais.</p>
+            <p class="text-center text-gray-600 mb-8">Siga este fluxo de trabalho para uma implantação bem-sucedida.
+                Clique em cada etapa para ver os detalhes e comandos essenciais.</p>
+            <p class="text-center text-gray-600 mb-8">Para ver um exemplo de configuração completa, clique em <a
+                    href="#config-example" class="text-blue-500">Configuração
+                    Completa</a>.</p>
+            <p class="text-center text-gray-600 mb-8">Já para ver uma explicação detalhada sobre o que significa cada
+                parâmetro, visite a página "<a href="https://github.com/MikaelGois/setting-bind-dns" target="_blank"
+                    class="text-blue-500">Guia de
+                    configuração do DNS BIND no Linux</a>".</p>
             <div id="workflow-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             </div>
             <div id="workflow-details" class="bg-white p-6 rounded-lg shadow-md min-h-[250px]">
@@ -97,28 +71,37 @@
 
         <section id="security" class="mb-16 bg-white p-6 md:p-8 rounded-lg shadow-lg">
             <h2 class="text-3xl font-bold text-center mb-2">Painel de Controle de Segurança</h2>
-            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">A segurança é a base de um servidor DNS confiável. Este painel consolida os conceitos críticos de segurança, desde a primeira linha de defesa no firewall até as diretivas de acesso no BIND.</p>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">A segurança é a base de um servidor DNS
+                confiável. Este painel consolida os conceitos críticos de segurança, desde a primeira linha de defesa no
+                firewall até as diretivas de acesso no BIND.</p>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Atenção, o gráfico a seguir serve apenas para
+                ajudar a ilustrar, é uma tradução visual das prioridades e relações descritas no conteúdo técnico.
+            </p>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
                 <div>
                     <h3 class="text-xl font-bold mb-4 text-center">Camadas de Defesa</h3>
                     <div class="chart-container">
                         <canvas id="securityLayersChart"></canvas>
                     </div>
-                    <p class="text-center mt-4 text-gray-600">Um servidor BIND seguro combina a proteção do <b class="text-[#3B82F6]">firewall</b> do sistema com as <b class="text-[#075985]">ACLs</b> internas do BIND para uma defesa em profundidade.</p>
+                    <p class="text-center mt-4 text-gray-600">Um servidor BIND seguro combina a proteção do <b
+                            class="text-[#3B82F6]">firewall</b> do sistema com as <b class="text-[#075985]">ACLs</b>
+                        internas do BIND para uma defesa em profundidade.</p>
                 </div>
                 <div>
                     <h3 class="text-xl font-bold mb-4 text-center">Diretivas Críticas de Configuração</h3>
                     <div class="chart-container">
                         <canvas id="securityDirectivesChart"></canvas>
                     </div>
-                    <p class="text-center mt-4 text-gray-600">A configuração correta destas diretivas no `named.conf` é vital para prevenir abusos, como ataques de amplificação de DNS.</p>
+                    <p class="text-center mt-4 text-gray-600">A configuração correta destas diretivas no `named.conf` é
+                        vital para prevenir abusos, como ataques de amplificação de DNS.</p>
                 </div>
             </div>
         </section>
 
         <section id="zones" class="mb-16">
             <h2 class="text-3xl font-bold text-center mb-2">Explorador de Arquivos de Zona</h2>
-            <p class="text-center text-gray-600 mb-8">Os arquivos de zona são o coração de um servidor autoritativo. Use este explorador para entender a sintaxe e o propósito de cada tipo de registro DNS.</p>
+            <p class="text-center text-gray-600 mb-8">Os arquivos de zona são o coração de um servidor autoritativo. Use
+                este explorador para entender a sintaxe e o propósito de cada tipo de registro DNS.</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="md:col-span-1 bg-white p-4 rounded-lg shadow-md">
                     <h3 class="font-bold text-lg mb-4">Tipos de Registro</h3>
@@ -131,9 +114,34 @@
             </div>
         </section>
 
+        <section id="config-example" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-2">Configuração Completa</h2>
+            <p class="text-center text-gray-600 mb-8">Use os exemplos abaixo como um ponto de partida. Selecione a base
+                do seu sistema operacional e clique nas abas para ver cada arquivo.</p>
+            <div class="bg-white rounded-lg shadow-lg p-2 md:p-4">
+                <div class="flex justify-center mb-4 bg-gray-100 rounded-lg p-1">
+                    <button class="distro-tab flex-1 py-2 px-4 font-semibold rounded-md active"
+                        data-distro="redhat">Base Red Hat</button>
+                    <button class="distro-tab flex-1 py-2 px-4 font-semibold rounded-md" data-distro="debian">Base
+                        Debian</button>
+                </div>
+                <div id="config-tabs-container">
+                    <div id="config-tabs" class="flex flex-wrap border-b border-gray-200 mb-4">
+                    </div>
+                    <div id="config-content" class="relative">
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="advanced">
             <h2 class="text-3xl font-bold text-center mb-2">Cenários Avançados</h2>
-            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Depois de dominar o básico, o BIND oferece recursos poderosos para redundância, flexibilidade e segurança aprimorada. Compare os cenários para decidir qual se adapta à sua necessidade.</p>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Depois de dominar o básico, o BIND oferece
+                recursos poderosos para redundância, flexibilidade e segurança aprimorada. Compare os cenários para
+                decidir qual se adapta à sua necessidade.</p>
+            <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Atenção, o gráfico a seguir serve apenas para
+                ajudar a ilustrar, é uma tradução visual das prioridades e relações descritas no conteúdo técnico.
+            </p>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
                 <div class="bg-white p-6 rounded-lg shadow-lg">
                     <h3 class="text-xl font-bold mb-4 text-center">Comparativo de Recursos</h3>
@@ -144,276 +152,32 @@
                 <div class="space-y-6">
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <h4 class="font-bold text-lg text-[#075985]">Redundância Mestre/Escravo</h4>
-                        <p class="text-gray-600">Garante alta disponibilidade replicando zonas para servidores secundários. Essencial para ambientes de produção.</p>
+                        <p class="text-gray-600">Garante alta disponibilidade replicando zonas para servidores
+                            secundários. Essencial para ambientes de produção.</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <h4 class="font-bold text-lg text-[#3B82F6]">DNS de Horizonte Dividido (Split-Horizon)</h4>
-                        <p class="text-gray-600">Fornece respostas diferentes para a mesma consulta dependendo da origem (interna vs. externa), ideal para redes corporativas.</p>
+                        <p class="text-gray-600">Fornece respostas diferentes para a mesma consulta dependendo da origem
+                            (interna vs. externa), ideal para redes corporativas.</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <h4 class="font-bold text-lg text-[#6D28D9]">DNSSEC</h4>
-                        <p class="text-gray-600">Adiciona assinaturas criptográficas aos dados DNS para proteger contra falsificação e envenenamento de cache.</p>
+                        <p class="text-gray-600">Adiciona assinaturas criptográficas aos dados DNS para proteger contra
+                            falsificação e envenenamento de cache.</p>
                     </div>
                 </div>
             </div>
         </section>
-
     </main>
 
     <footer class="bg-white mt-16">
         <div class="container mx-auto px-4 py-6 text-center text-gray-500">
-            <p>Aplicação interativa criada a partir do "Guia Abrangente para a Configuração do Servidor DNS BIND no Rocky Linux".</p>
+            <p>Aplicação interativa criada a partir do "<a href="https://github.com/MikaelGois/setting-bind-dns"
+                    target="_blank" class="text-blue-500">Guia de configuração do DNS BIND no Linux</a>".</p>
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const workflowData = [
-                {
-                    title: '1. Instalação',
-                    icon: '📦',
-                    description: 'Instale os pacotes BIND e as ferramentas essenciais. A abordagem varia ligeiramente entre as famílias de SO.',
-                    content: {
-                        redhat: `
-                            <h4 class="font-semibold text-lg mb-2">Comandos Principais (com chroot)</h4>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo dnf install bind bind-utils bind-chroot -y</code>
-                            <h4 class="font-semibold text-lg mt-4 mb-2">Gerenciamento do Serviço</h4>
-                            <p class="text-sm mb-2">Use <code>systemctl</code> com o serviço <code>named-chroot</code>.</p>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo systemctl enable --now named-chroot</code>`,
-                        debian: `
-                            <h4 class="font-semibold text-lg mb-2">Comandos Principais</h4>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo apt-get update\nsudo apt-get install bind9 bind9utils dnsutils -y</code>
-                            <h4 class="font-semibold text-lg mt-4 mb-2">Gerenciamento do Serviço</h4>
-                            <p class="text-sm mb-2">Em sistemas Debian, o serviço é chamado de <code>bind9</code>.</p>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo systemctl enable --now bind9</code>`
-                    }
-                },
-                {
-                    title: '2. Configuração',
-                    icon: '⚙️',
-                    description: 'Edite os arquivos de configuração para definir o comportamento global e declarar suas zonas.',
-                    content: {
-                        redhat: `<h4 class="font-semibold text-lg mb-2">Arquivo Principal: <code>/etc/named.conf</code></h4>
-                            <p class="text-sm mb-2">Defina as diretivas no bloco <code>options {}</code>. As zonas são geralmente declaradas em <code>/etc/named.rfc1912.zones</code>.</p>
-                            <h4 class="font-semibold text-lg mt-4 mb-2">Declaração de Zona</h4>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">zone "exemplo.local" IN {\n    type master;\n    file "exemplo.local.db";\n    allow-update { none; };\n};</code>`,
-                        debian: `<h4 class="font-semibold text-lg mb-2">Arquivo Principal: <code>/etc/bind/named.conf.local</code></h4>
-                            <p class="text-sm mb-2">As opções globais estão em <code>/etc/bind/named.conf.options</code>. Adicione suas declarações de zona aqui.</p>
-                            <h4 class="font-semibold text-lg mt-4 mb-2">Declaração de Zona</h4>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">zone "exemplo.local" {\n    type master;\n    file "/etc/bind/zones/exemplo.local.db";\n    allow-update { none; };\n};</code>`
-                    }
-                },
-                {
-                    title: '3. Validação',
-                    icon: '✅',
-                    description: 'Sempre verifique a sintaxe dos seus arquivos de configuração e de zona antes de ativar o serviço.',
-                    content: {
-                        redhat: `<h4 class="font-semibold text-lg mb-2">Verificar Configuração Global</h4>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo named-checkconf</code>
-                            <h4 class="font-semibold text-lg mt-4 mb-2">Verificar Arquivo de Zona</h4>
-                            <p class="text-sm mb-2">O caminho do arquivo de zona é relativo a <code>/var/named/</code>.</p>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo named-checkzone exemplo.local /var/named/exemplo.local.db</code>`,
-                        debian: `<h4 class="font-semibold text-lg mb-2">Verificar Configuração Global</h4>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo named-checkconf</code>
-                            <h4 class="font-semibold text-lg mt-4 mb-2">Verificar Arquivo de Zona</h4>
-                            <p class="text-sm mb-2">Use o caminho completo para o arquivo de zona.</p>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">sudo named-checkzone exemplo.local /etc/bind/zones/exemplo.local.db</code>`
-                    }
-                },
-                {
-                    title: '4. Ativação e Teste',
-                    icon: '🚀',
-                    description: 'Recarregue a configuração e teste a resolução de nomes com ferramentas como <code>dig</code>.',
-                    content: {
-                        redhat: `<h4 class="font-semibold text-lg mb-2">Aplicar Configurações</h4>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo systemctl reload named-chroot</code>
-                            <h4 class="font-semibold text-lg mt-4 mb-2">Testar com <code>dig</code></h4>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 servidorweb.exemplo.local</code>`,
-                        debian: `<h4 class="font-semibold text-lg mb-2">Aplicar Configurações</h4>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md mb-2 text-sm">sudo systemctl reload bind9</code>
-                            <h4 class="font-semibold text-lg mt-4 mb-2">Testar com <code>dig</code></h4>
-                            <code class="block bg-gray-800 text-white p-3 rounded-md text-sm">dig @127.0.0.1 servidorweb.exemplo.local</code>`
-                    }
-                }
-            ];
-
-            const recordData = {
-                'A': { title: 'A (Address)', description: 'Mapeia um nome de host para um endereço IPv4. É o tipo de registro mais comum.', syntax: 'nome-do-host IN A endereco-ipv4', example: 'servidorweb IN A 192.168.1.150' },
-                'AAAA': { title: 'AAAA (IPv6 Address)', description: 'Mapeia um nome de host para um endereço IPv6.', syntax: 'nome-do-host IN AAAA endereco-ipv6', example: 'servidorweb IN AAAA 2001:db8:1::150' },
-                'CNAME': { title: 'CNAME (Canonical Name)', description: 'Cria um alias (apelido) de um nome para outro. O alias aponta para o nome canônico.', syntax: 'alias IN CNAME nome-canonico', example: 'www IN CNAME servidorweb.exemplo.local.' },
-                'MX': { title: 'MX (Mail Exchanger)', description: 'Especifica os servidores de e-mail para o domínio, com uma prioridade numérica (menor é mais prioritário).', syntax: '@ IN MX prioridade servidor-de-email', example: '@ IN MX 10 mail.exemplo.local.' },
-                'NS': { title: 'NS (Name Server)', description: 'Delega uma zona a um servidor de nomes autoritativo. Define quais servidores são responsáveis pelo domínio.', syntax: '@ IN NS nome-do-servidor-dns', example: '@ IN NS ns1.exemplo.local.' },
-                'PTR': { title: 'PTR (Pointer)', description: 'Usado em zonas de pesquisa reversa para mapear um endereço IP de volta a um nome de host.', syntax: 'ultimo-octeto IN PTR nome-do-host', example: '150 IN PTR servidorweb.exemplo.local.' },
-                'SOA': { title: 'SOA (Start of Authority)', description: 'Declara a autoridade para a zona, contendo informações críticas como o servidor mestre, o e-mail do administrador, o número de série e timers.', syntax: '@ IN SOA ...', example: '@ IN SOA ns1.exemplo.local. admin.exemplo.local. (\n    2024052101 ; Serial\n    ... )' },
-                'TXT': { title: 'TXT (Text)', description: 'Permite associar texto arbitrário a um domínio. Usado para políticas de segurança como SPF e DKIM.', syntax: 'nome IN TXT "texto"', example: '@ IN TXT "v=spf1 mx -all"' },
-            };
-
-            const workflowContainer = document.getElementById('workflow-container');
-            const workflowDetails = document.getElementById('workflow-details');
-            
-            workflowData.forEach((step, index) => {
-                const card = document.createElement('div');
-                card.className = 'step-card bg-white p-6 rounded-lg shadow-md border-2 border-transparent';
-                card.innerHTML = `<div class="flex items-center"><span class="text-3xl mr-4">${step.icon}</span><div><h3 class="font-bold text-xl">${step.title}</h3><p class="text-gray-600 text-sm">${step.description}</p></div></div>`;
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    renderWorkflowDetails(step.content);
-                });
-                workflowContainer.appendChild(card);
-            });
-
-            function renderWorkflowDetails(content) {
-                workflowDetails.innerHTML = `
-                    <div class="flex border-b border-gray-200 mb-4">
-                        <button data-tab="redhat" class="tab-button py-2 px-4 font-semibold text-gray-600 rounded-t-md active">Base Red Hat</button>
-                        <button data-tab="debian" class="tab-button py-2 px-4 font-semibold text-gray-600 rounded-t-md">Base Debian</button>
-                    </div>
-                    <div>
-                        <div data-tab-content="redhat" class="tab-content whitespace-pre-wrap">${content.redhat}</div>
-                        <div data-tab-content="debian" class="tab-content whitespace-pre-wrap hidden">${content.debian}</div>
-                    </div>
-                `;
-                
-                workflowDetails.querySelectorAll('.tab-button').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const targetTab = e.target.dataset.tab;
-                        
-                        workflowDetails.querySelectorAll('.tab-button').forEach(btn => {
-                            btn.classList.toggle('active', btn.dataset.tab === targetTab);
-                        });
-
-                        workflowDetails.querySelectorAll('.tab-content').forEach(contentPanel => {
-                            contentPanel.classList.toggle('hidden', contentPanel.dataset.tabContent !== targetTab);
-                        });
-                    });
-                });
-            }
-
-            const recordList = document.getElementById('record-list');
-            const recordDetails = document.getElementById('record-details');
-
-            Object.keys(recordData).forEach(key => {
-                const li = document.createElement('li');
-                li.className = 'record-item p-2 rounded-md cursor-pointer transition-colors hover:bg-gray-100';
-                li.textContent = recordData[key].title;
-                li.dataset.record = key;
-                li.addEventListener('click', () => {
-                    document.querySelectorAll('.record-item').forEach(item => item.classList.remove('active'));
-                    li.classList.add('active');
-                    const data = recordData[key];
-                    recordDetails.innerHTML = `
-                        <h3 class="font-bold text-xl mb-2">${data.title}</h3>
-                        <p class="text-gray-600 mb-4">${data.description}</p>
-                        <h4 class="font-semibold text-md mb-1">Sintaxe:</h4>
-                        <code class="block bg-gray-100 text-gray-800 p-2 rounded-md mb-4 text-sm">${data.syntax}</code>
-                        <h4 class="font-semibold text-md mb-1">Exemplo:</h4>
-                        <code class="block bg-gray-800 text-white p-3 rounded-md text-sm whitespace-pre-wrap">${data.example}</code>
-                    `;
-                });
-                recordList.appendChild(li);
-            });
-
-
-            const tooltipTitleCallback = (tooltipItems) => {
-                const item = tooltipItems[0];
-                let label = item.chart.data.labels[item.dataIndex];
-                return Array.isArray(label) ? label.join(' ') : label;
-            };
-
-            const sharedChartOptions = {
-                maintainAspectRatio: false,
-                responsive: true,
-                plugins: {
-                    legend: { labels: { color: '#374151' } },
-                    tooltip: {
-                        callbacks: { title: tooltipTitleCallback },
-                        backgroundColor: '#111827',
-                        titleColor: '#ffffff',
-                        bodyColor: '#ffffff',
-                        padding: 10,
-                        cornerRadius: 4,
-                    }
-                }
-            };
-
-            new Chart(document.getElementById('securityLayersChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Firewall (firewalld)', 'BIND (named.conf)'],
-                    datasets: [{
-                        data: [50, 50],
-                        backgroundColor: ['#3B82F6', '#075985'],
-                        borderColor: '#F8F7F4',
-                        borderWidth: 4
-                    }]
-                },
-                options: { ...sharedChartOptions, cutout: '60%' }
-            });
-
-            new Chart(document.getElementById('securityDirectivesChart'), {
-                type: 'bar',
-                data: {
-                    labels: ['allow-recursion', 'recursion', 'allow-query', 'listen-on', 'allow-transfer'],
-                    datasets: [{
-                        label: 'Nível de Criticidade',
-                        data: [10, 9, 8, 7, 6],
-                        backgroundColor: ['#DC2626', '#F59E0B', '#075985', '#075985', '#F59E0B'],
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    ...sharedChartOptions,
-                    indexAxis: 'y',
-                    plugins: { legend: { display: false }, tooltip: sharedChartOptions.plugins.tooltip },
-                    scales: {
-                        x: { grid: { display: false } },
-                        y: { grid: { display: false } }
-                    }
-                }
-            });
-
-            new Chart(document.getElementById('advancedTopicsChart'), {
-                type: 'radar',
-                data: {
-                    labels: ['Complexidade', 'Impacto na Segurança', 'Impacto na Disponibilidade'],
-                    datasets: [
-                        { label: 'Mestre/Escravo', data: [4, 3, 9], fill: true, backgroundColor: 'rgba(7, 89, 133, 0.2)', borderColor: '#075985', pointBackgroundColor: '#075985' },
-                        { label: 'Split-Horizon', data: [6, 7, 5], fill: true, backgroundColor: 'rgba(59, 130, 246, 0.2)', borderColor: '#3B82F6', pointBackgroundColor: '#3B82F6' },
-                        { label: 'DNSSEC', data: [9, 10, 6], fill: true, backgroundColor: 'rgba(109, 40, 217, 0.2)', borderColor: '#6D28D9', pointBackgroundColor: '#6D28D9' }
-                    ]
-                },
-                options: {
-                    ...sharedChartOptions,
-                    scales: {
-                        r: {
-                            angleLines: { color: '#D1D5DB' },
-                            grid: { color: '#E5E7EB' },
-                            pointLabels: { font: { size: 13 }, color: '#374151' },
-                            ticks: { display: false, stepSize: 2 }
-                        }
-                    }
-                }
-            });
-
-            const navLinks = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('main section');
-            window.addEventListener('scroll', () => {
-                let current = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    if (pageYOffset >= sectionTop - 100) {
-                        current = section.getAttribute('id');
-                    }
-                });
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href').includes(current)) {
-                        link.classList.add('active');
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="assets/scripts.js"></script>
 </body>
+
 </html>
