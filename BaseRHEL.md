@@ -259,7 +259,7 @@ zone "1.168.192.in-addr.arpa" IN {
 
 O arquivo de zona reversa também requer registros `SOA` e `NS`, mas o seu principal objetivo é conter registros `PTR` (Pointer). Estes registros fazem o mapeamento inverso de IP para nome. Para um determinado prefixo de rede, o registro `PTR` só precisa de especificar o último octeto do endereço IP. Caso os arquivos sejam criados em uma pasta diferente, por exemplo, **`/var/named/zones/`**, é necessário ajustar o caminho no arquivo de declaração de zona do BIND e garantir que o processo **`named`** tenha acesso a essa pasta adicionando as a propriedade da pasta para **`root:named`** e as permissões da pasta para **`740`**.
 
-Exemplo de arquivo de zona reversa (**`/var/named/1.168.192.in-addr.arpa.db`**) para a rede **`192.168.1.0/24`**:
+Exemplo de arquivo de zona reversa (**`/var/named/1.168.192.db`**) para a rede **`192.168.1.0/24`**:
 ```
 $TTL 1D
 @       IN      SOA     ns1.exemplo.local. admin.exemplo.local. (
