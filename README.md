@@ -37,7 +37,7 @@ Antes de mergulhar na configuração, é crucial entender alguns conceitos bási
 
 * **Encaminhadores (Forwarders)**: Em vez de fazer a resolução recursiva sozinho, um servidor BIND pode ser configurado para simplesmente "encaminhar" todas as consultas externas para outro servidor DNS (como o do Google `8.8.8.8`), que fará o trabalho pesado.
 
-<h2 align="center">Guias de Avançados por Sistema Operacional</h2>
+<h2 align="center">Guias Avançados por Sistema Operacional</h2>
 <p align="center">A estrutura de arquivos e os nomes dos pacotes do BIND variam entre as famílias de distribuições Linux. Escolha o guia que corresponde ao seu sistema:</p>
 
 <h3 align="center">
