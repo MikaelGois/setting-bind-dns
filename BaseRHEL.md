@@ -369,6 +369,9 @@ Para que os clientes na rede possam usar o novo servidor DNS, os seus resolvedor
 
 É importante **adicionar** o novo servidor DNS à lista de servidores existentes, em vez de o substituir, para não perder o acesso a nomes de domínio na Internet (a menos que o servidor BIND local também esteja configurado para recursão).
 
+> [!WARNING]
+> **Nota sobre Arquitetura (DNS e Roteamento):** Neste guia, utilizamos o IP `192.168.1.10` para representar o servidor DNS. É importante esclarecer que o servidor DNS não precisa ser necessariamente o roteador (gateway) da sua rede. Embora em muitos laboratórios práticos uma única máquina Linux acumule as funções de roteador e servidor DNS no mesmo endereço IP (por exemplo, `192.168.1.1`), mantemos a numeração `.10` nos exemplos para separar os papéis dos serviços de forma didática.
+
 Para adicionar o servidor DNS local (ex: `192.168.1.10`) a uma conexão de rede chamada `enp1s0`:
 
 * Adiciona o DNS local como primário, mantendo `8.8.8.8` como secundário:
