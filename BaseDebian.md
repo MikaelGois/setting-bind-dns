@@ -497,6 +497,8 @@ Acesse o arquivos de configuração do netplan:
 ```bash
 sudo nano /etc/netplan/SEU_ARQUIVO.yaml
 ```
+>[!WARNING]
+>**Nota sobre Arquitetura (DNS e Roteamento):** No exemplo de configuração de rede a seguir, o IP `192.168.1.10` representa o servidor DNS BIND, enquanto o IP `192.168.1.1` atua como o gateway padrão (roteador). Em muitos ambientes e laboratórios, é comum que uma única máquina (como o próprio servidor Linux) desempenhe simultaneamente as funções de roteador e servidor DNS usando o mesmo IP. O uso de IPs distintos neste guia tem o propósito estritamente didático de demonstrar que o serviço de resolução de nomes não precisa, obrigatoriamente, estar atrelado ao roteador da rede.
 
 Faças as modificações conforme exemplificado a baixo:
 
